@@ -144,6 +144,7 @@ void loop()
     heartbeat();
     lastHeartbeat = currentTime;
   }
+  Serial.println("loop...");
   digitalWrite(LED_BUILTIN, HIGH);
   delay(1000);
 }
