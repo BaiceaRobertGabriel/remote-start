@@ -68,20 +68,22 @@ void setup()
   Serial.begin(9600);
   Serial.println("Begin setup");
   pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+  pinMode(D1, OUTPUT);
+  digitalWrite(D1, HIGH);
+  digitalWrite(LED_BUILTIN, HIGH);
   SerialAT.begin(115200);
   modem.init();
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
   Serial.println("End setup");
 }
 
 void loop()
 {
-  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, HIGH);
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
   delay(500);
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
 }
