@@ -75,7 +75,6 @@ void setup()
   modem.init();
   mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
   mqtt.setBufferSize(1024);
-  mqtt.setKeepAlive(30000);
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
   Serial.println("End setup");
