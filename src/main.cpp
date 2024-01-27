@@ -11,6 +11,15 @@ TinyGsm modem(SerialAT);
 TinyGsmClient client(modem);
 PubSubClient mqtt(client);
 
+void setNetworkParameters()
+{
+  SerialAT.begin(115200);
+  modem.init();
+  mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
+  mqtt.setBufferSize(1024);
+  mqtt.setCallback(mqttCallback);
+}
+
 void ensureNetworkAndMqttConnectivity()
 {
   if (!modem.isNetworkConnected())
@@ -64,25 +73,32 @@ void mqttCallback(char *topic, byte *payload, unsigned int len)
   Serial.println();
 }
 
+void setupPowerSaving()
+{
+  WiFi.mode(WIFI_OFF);
+}
+
+void setupRadioRx()
+{
+  pinMode(D8, OUTPUT);
+  digitalWrite(D8, LOW);
+}
+
 void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  WiFi.mode(WIFI_OFF);
+  setupPowerSaving();
 
   Serial.begin(115200);
   Serial.println("Begin setup");
 
-  pinMode(D8, OUTPUT);
-  digitalWrite(D8, LOW);
+  setupRadioRx();
 
-  SerialAT.begin(115200);
-  modem.init();
-  mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
-  mqtt.setBufferSize(1024);
-  mqtt.setCallback(mqttCallback);
+  setNetworkParameters();
   ensureNetworkAndMqttConnectivity();
+  
   Serial.println("End setup");
 
   digitalWrite(LED_BUILTIN, HIGH);
@@ -91,9 +107,13 @@ void setup()
 void loop()
 {
   digitalWrite(LED_BUILTIN, LOW);
+
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
+
   Serial.println("Test...");
+
   digitalWrite(LED_BUILTIN, HIGH);
+  
   delay(1000);
 }
