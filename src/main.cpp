@@ -55,13 +55,37 @@ void ensureNetworkAndMqttConnectivity()
   }
 }
 
-void mqttCallback(char *topic, byte *payload, unsigned int len)
+void handleCommand(String payload)
 {
+  payload.toLowerCase();
+  if (payload == "reboot")
+  {
+    Serial.println("[Command] Rebooting...");
+    ESP.restart();
+    return;
+  }
+
+  Serial.println("[Command] Unknown command");
+}
+
+void mqttCallback(char *topic, byte *payload, unsigned int length)
+{
+  String topicStr = String(topic);
+  String payloadStr = "";
+  for (unsigned int i = 0; i < length; i++)
+  {
+    payloadStr += (char)payload[i];
+  }
   Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("]: ");
-  Serial.write(payload, len);
+  Serial.print(topicStr);
+  Serial.print("] ");
+  Serial.print(payloadStr);
   Serial.println();
+  if (topicStr.startsWith("commands/"))
+  {
+    handleCommand(payloadStr);
+    return;
+  }
 }
 
 void setNetworkParameters()
@@ -98,7 +122,7 @@ void setup()
 
   setNetworkParameters();
   ensureNetworkAndMqttConnectivity();
-  
+
   Serial.println("End setup");
 
   digitalWrite(LED_BUILTIN, HIGH);
