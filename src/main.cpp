@@ -140,7 +140,7 @@ void loop()
   unsigned long currentTime = millis();
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
-  if (lastHeartbeat == 0 || currentTime - lastHeartbeat >= 30000) {
+  if (lastHeartbeat == 0 || currentTime - lastHeartbeat >= 15000) {
     heartbeat();
     lastHeartbeat = currentTime;
   }
