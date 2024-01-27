@@ -112,6 +112,7 @@ void setupRadioRx()
 
 void heartbeat() {
   mqtt.publish("heartbeat/mondeo", "mondeo");
+  mqtt.flush();
 }
 
 void setup()
