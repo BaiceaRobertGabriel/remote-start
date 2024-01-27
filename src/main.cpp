@@ -81,5 +81,6 @@ void loop()
 {
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
-  delay(500);
+  Serial.println("Test...");
+  delay(1000);
 }
