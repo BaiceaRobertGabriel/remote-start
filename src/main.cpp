@@ -68,8 +68,8 @@ void setup()
   Serial.begin(9600);
   Serial.println("Begin setup");
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(D1, OUTPUT);
-  digitalWrite(D1, HIGH);
+  pinMode(D4, OUTPUT);
+  digitalWrite(D4, HIGH);
   digitalWrite(LED_BUILTIN, HIGH);
   SerialAT.begin(115200);
   modem.init();
