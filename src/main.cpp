@@ -65,7 +65,7 @@ void mqttCallback(char *topic, byte *payload, unsigned int len)
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Begin setup");
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(D4, OUTPUT);
