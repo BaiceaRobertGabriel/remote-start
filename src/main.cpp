@@ -70,7 +70,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(D4, OUTPUT);
   digitalWrite(D4, HIGH);
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
   SerialAT.begin(115200);
   modem.init();
   mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
@@ -78,15 +78,15 @@ void setup()
   mqtt.setKeepAlive(30000);
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
-  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, HIGH);
   Serial.println("End setup");
 }
 
 void loop()
 {
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
   delay(500);
-  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, HIGH);
 }
