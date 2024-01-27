@@ -6,7 +6,6 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 
-
 SoftwareSerial SerialAT(D2, D1);
 TinyGsm modem(SerialAT);
 TinyGsmClient client(modem);
@@ -67,8 +66,11 @@ void mqttCallback(char *topic, byte *payload, unsigned int len)
 
 void setup()
 {
-  WiFi.mode(WIFI_OFF); 
-  
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+
+  WiFi.mode(WIFI_OFF);
+
   Serial.begin(115200);
   Serial.println("Begin setup");
 
@@ -82,12 +84,16 @@ void setup()
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
   Serial.println("End setup");
+
+  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop()
 {
+  digitalWrite(LED_BUILTIN, LOW);
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
   Serial.println("Test...");
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(1000);
 }
