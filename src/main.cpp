@@ -88,6 +88,9 @@ void setup()
 {
   setupPowerSaving();
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+
   Serial.begin(115200);
   Serial.println("Begin setup");
 
@@ -97,15 +100,17 @@ void setup()
   ensureNetworkAndMqttConnectivity();
   
   Serial.println("End setup");
+
+  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop()
 {
-
+  digitalWrite(LED_BUILTIN, LOW);
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
 
   Serial.println("Test...");
-  
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(1000);
 }
