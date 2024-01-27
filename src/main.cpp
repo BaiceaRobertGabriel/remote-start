@@ -11,6 +11,8 @@ TinyGsm modem(SerialAT);
 TinyGsmClient client(modem);
 PubSubClient mqtt(client);
 
+unsigned long lastHeartbeat = 0;
+
 void ensureNetworkAndMqttConnectivity()
 {
   if (!modem.isNetworkConnected())
@@ -108,6 +110,10 @@ void setupRadioRx()
   digitalWrite(D8, LOW);
 }
 
+void heartbeat() {
+  mqtt.publish("heartbeat/mondeo", "mondeo", true);
+}
+
 void setup()
 {
   setupPowerSaving();
@@ -131,9 +137,13 @@ void setup()
 void loop()
 {
   digitalWrite(LED_BUILTIN, LOW);
+  unsigned long currentTime = millis();
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
-
+  if (lastHeartbeat == 0 || currentTime - lastHeartbeat >= 30000) {
+    heartbeat();
+    lastHeartbeat = currentTime;
+  }
   digitalWrite(LED_BUILTIN, HIGH);
   delay(1000);
 }
