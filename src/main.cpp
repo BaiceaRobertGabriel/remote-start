@@ -1,41 +1,52 @@
 #define TINY_GSM_MODEM_SIM800
 
-
 #include <Arduino.h>
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
 #include <SoftwareSerial.h>
 
-
 SoftwareSerial SerialAT(2, 3);
-TinyGsm        modem(SerialAT);
+TinyGsm modem(SerialAT);
 TinyGsmClient client(modem);
-PubSubClient  mqtt(client);
+PubSubClient mqtt(client);
 
-
-void ensureNetworkAndMqttConnectivity() {
-  if (!modem.isNetworkConnected()) {
+void ensureNetworkAndMqttConnectivity()
+{
+  if (!modem.isNetworkConnected())
+  {
     Serial.println("Network not connected");
-    while (!modem.waitForNetwork()) {
+    while (!modem.waitForNetwork(5000))
+    {
+      Serial.println("Network connectivity failed. Retrying in 1 second.");
       delay(1000);
     }
     Serial.println("Connected to network");
   }
-  if (!modem.isGprsConnected()) {
+  if (!modem.isGprsConnected())
+  {
     Serial.println("GPRS not connected");
-    while (!modem.isGprsConnected()) {
-      if (!modem.gprsConnect("net")) {
+    while (!modem.isGprsConnected())
+    {
+      if (!modem.gprsConnect("net"))
+      {
+        Serial.println("GPRS connectivity failed. Retrying in 1 second.");
         delay(1000);
       }
     }
     Serial.println("Connected to GPRS");
   }
-  if (!mqtt.connected()) {
+  if (!mqtt.connected())
+  {
     Serial.println("MQTT not connected");
-    while (!mqtt.connected()) {
-      if (!mqtt.connect("mondeo", "zvyhbhor:zvyhbhor", "CDWguXi3eA1_gAafB6fkwcp76k6Js8sC")) {
+    while (!mqtt.connected())
+    {
+      if (!mqtt.connect("mondeo", "zvyhbhor:zvyhbhor", "CDWguXi3eA1_gAafB6fkwcp76k6Js8sC"))
+      {
+        Serial.println("MQTT connectivity failed. Retrying in 1 second.");
         delay(1000);
-      } else {
+      }
+      else
+      {
         mqtt.subscribe("commands/mondeo");
       }
     }
@@ -43,7 +54,8 @@ void ensureNetworkAndMqttConnectivity() {
   }
 }
 
-void mqttCallback(char* topic, byte* payload, unsigned int len) {
+void mqttCallback(char *topic, byte *payload, unsigned int len)
+{
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("]: ");
@@ -51,19 +63,22 @@ void mqttCallback(char* topic, byte* payload, unsigned int len) {
   Serial.println();
 }
 
-
-void setup() {
+void setup()
+{
+  Serial.begin(9600);
+  Serial.println("Begin setup");
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
-  Serial.begin(9600);
   SerialAT.begin(115200);
   modem.init();
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
   digitalWrite(LED_BUILTIN, LOW);
+  Serial.println("End setup");
 }
 
-void loop() {
+void loop()
+{
   digitalWrite(LED_BUILTIN, HIGH);
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
