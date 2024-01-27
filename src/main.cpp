@@ -106,8 +106,8 @@ void setupPowerSaving()
 
 void setupRadioRx()
 {
-  pinMode(D8, OUTPUT);
-  digitalWrite(D8, LOW);
+  pinMode(D7, OUTPUT);
+  digitalWrite(D7, HIGH);
 }
 
 void heartbeat() {
