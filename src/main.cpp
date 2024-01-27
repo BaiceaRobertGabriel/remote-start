@@ -4,36 +4,34 @@
 #include <Arduino.h>
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
+#include <SoftwareSerial.h>
 
 
-// #define DUMP_AT_COMMANDS
-
-
-#ifdef DUMP_AT_COMMANDS
-#include <StreamDebugger.h>
-StreamDebugger debugger(Serial1, Serial);
-TinyGsm        modem(debugger);
-#else
-TinyGsm        modem(Serial1);
-#endif
+SoftwareSerial SerialAT(2, 3);
+TinyGsm        modem(SerialAT);
 TinyGsmClient client(modem);
 PubSubClient  mqtt(client);
 
 
 void ensureNetworkAndMqttConnectivity() {
   if (!modem.isNetworkConnected()) {
+    Serial.println("Network not connected");
     while (!modem.waitForNetwork()) {
       delay(1000);
     }
+    Serial.println("Connected to network");
   }
   if (!modem.isGprsConnected()) {
+    Serial.println("GPRS not connected");
     while (!modem.isGprsConnected()) {
       if (!modem.gprsConnect("net")) {
         delay(1000);
       }
     }
+    Serial.println("Connected to GPRS");
   }
   if (!mqtt.connected()) {
+    Serial.println("MQTT not connected");
     while (!mqtt.connected()) {
       if (!mqtt.connect("mondeo", "zvyhbhor:zvyhbhor", "CDWguXi3eA1_gAafB6fkwcp76k6Js8sC")) {
         delay(1000);
@@ -41,6 +39,7 @@ void ensureNetworkAndMqttConnectivity() {
         mqtt.subscribe("commands/mondeo");
       }
     }
+    Serial.println("Connected to MQTT");
   }
 }
 
@@ -55,11 +54,13 @@ void mqttCallback(char* topic, byte* payload, unsigned int len) {
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);
-  Serial1.begin(115200);
+  digitalWrite(LED_BUILTIN, HIGH);
+  Serial.begin(9600);
+  SerialAT.begin(115200);
   modem.init();
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void loop() {
