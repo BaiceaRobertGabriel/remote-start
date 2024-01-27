@@ -5,7 +5,7 @@
 #include <PubSubClient.h>
 #include <SoftwareSerial.h>
 
-SoftwareSerial SerialAT(3, 2);
+SoftwareSerial SerialAT(2, 1);
 TinyGsm modem(SerialAT);
 TinyGsmClient client(modem);
 PubSubClient mqtt(client);
