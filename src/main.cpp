@@ -73,6 +73,9 @@ void setup()
   digitalWrite(LED_BUILTIN, HIGH);
   SerialAT.begin(115200);
   modem.init();
+  mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
+  mqtt.setBufferSize(1024);
+  mqtt.setKeepAlive(30000);
   mqtt.setCallback(mqttCallback);
   ensureNetworkAndMqttConnectivity();
   digitalWrite(LED_BUILTIN, LOW);
