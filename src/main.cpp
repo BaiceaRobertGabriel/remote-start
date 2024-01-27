@@ -110,7 +110,6 @@ void loop()
   ensureNetworkAndMqttConnectivity();
   mqtt.loop();
 
-  Serial.println("Test...");
   digitalWrite(LED_BUILTIN, HIGH);
   delay(1000);
 }
