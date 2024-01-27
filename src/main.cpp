@@ -67,6 +67,10 @@ void setup()
 {
   Serial.begin(115200);
   Serial.println("Begin setup");
+
+  pinMode(D8, OUTPUT);
+  digitalWrite(D8, LOW);
+
   SerialAT.begin(115200);
   modem.init();
   mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
