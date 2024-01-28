@@ -102,12 +102,6 @@ void setupPowerSaving()
   WiFi.mode(WIFI_OFF);
 }
 
-void setupRadioRx()
-{
-  pinMode(D7, OUTPUT);
-  digitalWrite(D7, HIGH);
-}
-
 void setup()
 {
   setupPowerSaving();
@@ -117,8 +111,6 @@ void setup()
 
   Serial.begin(9600);
   Serial.println("Begin setup");
-
-  setupRadioRx();
 
   setNetworkParameters();
   ensureNetworkAndMqttConnectivity();
