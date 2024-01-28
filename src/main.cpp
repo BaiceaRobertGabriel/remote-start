@@ -107,10 +107,10 @@ void setupPowerSaving()
 
 void setup()
 {
-  setupPowerSaving();
-
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
+
+  setupPowerSaving();
 
   Serial.begin(9600);
   Serial.println("Begin setup");
