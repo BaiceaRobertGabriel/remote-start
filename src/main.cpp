@@ -90,6 +90,9 @@ void mqttCallback(char *topic, byte *payload, unsigned int length)
 
 void setNetworkParameters()
 {
+  pinMode(D4, OUTPUT);
+  digitalWrite(D4, HIGH);
+  
   SerialAT.begin(9600);
   modem.init();
   mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
