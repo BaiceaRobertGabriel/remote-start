@@ -93,7 +93,7 @@ void setNetworkParameters()
   pinMode(D3, OUTPUT);
   digitalWrite(D3, HIGH);
 
-  SerialAT.begin(115200);
+  SerialAT.begin(9600);
   modem.init();
   mqtt.setServer("cow.rmq2.cloudamqp.com", 1883);
   mqtt.setBufferSize(1024);
